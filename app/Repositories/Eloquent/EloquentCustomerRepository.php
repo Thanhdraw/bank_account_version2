@@ -11,4 +11,9 @@ class EloquentCustomerRepository implements CustomerRepositoryInterface
     {
         return Customer::create($data);
     }
+
+    public function update(array $data): Customer
+    {
+        return Customer::update($data);
+    }
 }

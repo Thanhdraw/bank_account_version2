@@ -16,17 +16,20 @@
             <!-- Tabs -->
             <ul class="nav nav-pills mb-4" id="tabMenu" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">
+                    <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info"
+                        type="button" role="tab">
                         <i class="fas fa-user me-2"></i>Thông tin tài khoản
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab">
+                    <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history"
+                        type="button" role="tab">
                         <i class="fas fa-history me-2"></i>Lịch sử giao dịch
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="report-tab" data-bs-toggle="tab" data-bs-target="#report" type="button" role="tab">
+                    <button class="nav-link" id="report-tab" data-bs-toggle="tab" data-bs-target="#report" type="button"
+                        role="tab">
                         <i class="fas fa-chart-line me-2"></i>Báo cáo giao dịch
                     </button>
                 </li>
@@ -35,47 +38,75 @@
             <div class="tab-content" id="tabMenuContent">
                 <!-- Tab 1: Thông tin tài khoản -->
                 <div class="tab-pane fade show active" id="info" role="tabpanel">
-                    <div class="card">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0">Thông tin cá nhân</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <table class="table table-borderless">
-                                        <tr>
-                                            <td class="fw-medium text-muted" style="width: 120px;">Họ tên:</td>
-                                            <td>Nguyễn Văn A</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-medium text-muted">Email:</td>
-                                            <td>nguyenvana@gmail.com</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-medium text-muted">Số điện thoại:</td>
-                                            <td>0901234567</td>
-                                        </tr>
-                                    </table>
+                    <form action="{{ route('customer.update', $customer->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="tab-pane fade show active" id="info" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">Thông tin cá nhân</h5>
                                 </div>
-                                <div class="col-md-6">
-                                    <table class="table table-borderless">
-                                        <tr>
-                                            <td class="fw-medium text-muted" style="width: 120px;">Loại tài khoản:</td>
-                                            <td><span class="badge bg-info">Tiết kiệm</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-medium text-muted">Trạng thái:</td>
-                                            <td><span class="badge bg-success">Hoạt động</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fw-medium text-muted">Ngày tạo:</td>
-                                            <td>15/06/2025</td>
-                                        </tr>
-                                    </table>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <!-- Cột bên trái -->
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="fw-medium text-muted">Họ tên</label>
+                                                <input type="text" name="fullname" class="form-control"
+                                                    value="{{ $customer->fullname }}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="fw-medium text-muted">Email</label>
+                                                <input type="email" name="email" class="form-control"
+                                                    value="{{ $customer->email }}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="fw-medium text-muted">Số điện thoại</label>
+                                                <input type="text" name="phone" class="form-control"
+                                                    value="{{ $customer->phone }}">
+                                            </div>
+                                        </div>
+
+                                        <!-- Cột bên phải -->
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="fw-medium text-muted">Địa chỉ</label>
+                                                <input type="text" name="address" class="form-control"
+                                                    value="{{ $customer->address }}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="fw-medium text-muted">Ngày sinh</label>
+                                                <input type="date" name="birth_day" class="form-control"
+                                                    value="{{ $customer->birth_day?->format('Y-m-d') }}">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-medium">Giới tính</label>
+                                                <select name="gender" class="form-control">
+                                                    @foreach ($gender as $key => $label)
+                                                    <option value="{{ $key }}" {{ $customer->gender === $key ?
+                                                        'selected' : '' }}>
+                                                        {{ $label }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Nút cập nhật -->
+                                    <div class="text-end mt-3">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-1"></i> Cập nhật
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
+
                 </div>
 
                 <!-- Tab 2: Lịch sử giao dịch -->
@@ -197,7 +228,7 @@
             </div>
         </div>
     </div>
-     <a href="{{ route('accounts.index') }}" class="btn btn-secondary mt-3">Quay lại danh sách</a>
+    <a href="{{ route('accounts.index') }}" class="btn btn-secondary mt-3">Quay lại danh sách</a>
 </div>
 
 @endsection

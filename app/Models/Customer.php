@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\GenderCustomer;
 use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
@@ -22,6 +23,12 @@ class Customer extends Model
     ];
 
     protected $hidden = ['password', 'remember_token'];
+
+
+    protected $casts = [
+        'gender' => GenderCustomer::class,
+        'birth_day' => 'date'
+    ];
 
     public function account()
     {

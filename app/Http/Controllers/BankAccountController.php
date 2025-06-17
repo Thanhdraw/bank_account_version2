@@ -64,18 +64,10 @@ class BankAccountController extends Controller
 
     }
 
-    public function info($id)
-    {
-
-        $account = $this->bankAccount->findOrFail($id);
-
-        return view('public.accounts.info.index', compact('account'));
-    }
-
     public function deposit(TransactionRequest $request, $id)
     {
         $data = $request->validated();
-        
+
         $account = $this->bankAccount->findOrFail($id);
 
         $result = $this->service->deposit($account, (float) $data['amount']);

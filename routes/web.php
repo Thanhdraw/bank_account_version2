@@ -21,11 +21,21 @@ Route::prefix('/accounts')
 
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
-        Route::get('/{id}','show')->name('show');
+        Route::get('/{id}', 'show')->name('show');
         Route::post('/store', 'store')->name('store');
         Route::get('info/{id}', 'info')->name('info');
 
         Route::post('/{id}/deposit', 'deposit')->name('deposit');
         Route::post('/{id}/withdraw', 'withdraw')->name('withdraw');
 
+    });
+
+
+
+Route::prefix('/customters')
+    ->controller(App\Http\Controllers\CustomerController::class)
+    ->name('customer.')
+    ->group(function () {
+        Route::get('/{id}', 'index')->name('index');
+        Route::put('update/{id}', 'update')->name('update');
     });
