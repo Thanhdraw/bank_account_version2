@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Services\Accounts;
+
 use App\Abstracts\BaseAccount;
 
 

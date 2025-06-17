@@ -21,3 +21,15 @@
     });
 </script>
 @endif
+
+@if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Thất bại!',
+            text: @json(session('error')),
+            timer: 5000,
+            showConfirmButton: true
+        });
+    </script>
+@endif

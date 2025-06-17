@@ -3,10 +3,12 @@ namespace App\Services;
 
 use App\Models\BankAccount;
 use App\Models\Customer;
+use App\Services\Accounts\AccountFactory;
 use Illuminate\Support\Facades\DB;
 use App\Enums\TypeAccount;
 use App\Repositories\Contracts\BankAccountRepositoryInterface;
 use App\Repositories\Contracts\CustomerRepositoryInterface as ContractsCustomerRepositoryInterface;
+use App\Services\Accounts\StandardAccount;
 
 class BankAccountService
 {
@@ -56,7 +58,9 @@ class BankAccountService
     {
         DB::beginTransaction();
         try {
-            $newbalance = $account->deposit($amount);
+
+            $logic = AccountFactory::make($account);
+            $newbalance = $logic->deposit($amount);
 
             DB::commit();
             return [
@@ -79,7 +83,10 @@ class BankAccountService
     {
         DB::beginTransaction();
         try {
-            $newbalance = $account->withdraw($amount);
+
+            $logic = AccountFactory::make($account);
+            $newbalance = $logic->withdraw($amount);
+            
             DB::commit();
             return [
                 'status' => 'success',
@@ -109,5 +116,18 @@ class BankAccountService
             'message' => $message
         ];
     }
+
+    public function filterAccountType(int|string|TypeAccount $type, BankAccount $account): object
+    {
+        if (!$type instanceof TypeAccount) {
+            $type = TypeAccount::tryFrom((int) $type);
+        }
+
+        return match ($type) {
+            TypeAccount::Standard => new StandardAccount($account),
+            default => throw new \Exception("Loại tài khoản không hợp lệ"),
+        };
+    }
+
 
 }

@@ -27,7 +27,7 @@ class BankAccount extends Model
     }
 
     protected $casts = [
-        'type' => TypeAccount::class,
+        'type' => \App\Enums\TypeAccount::class,
     ];
 
     public function getBalance()
