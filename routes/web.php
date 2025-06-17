@@ -12,3 +12,11 @@ Route::resource('accounts', BankAccountController::class)->except(['edit', 'upda
 
 Route::post('/accounts/{account}/deposit', [BankAccountController::class, 'deposit'])->name('accounts.deposit');
 Route::post('/accounts/{account}/withdraw', [BankAccountController::class, 'withdraw'])->name('accounts.withdraw');
+
+
+Route::prefix('/tai-khoan')
+    ->controller(App\Http\Controllers\BankAccountController::class)
+    ->name('accounts.')
+    ->group(function () {
+        Route::get('info/{id}', 'info')->name('info');
+    });

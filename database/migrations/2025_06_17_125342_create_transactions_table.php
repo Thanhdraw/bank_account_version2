@@ -28,7 +28,7 @@ return new class extends Migration {
             // Indexes
             $table->index(['from_account_id', 'status', 'created_at']);
             $table->index(['to_account_id', 'status', 'created_at']);
-            $table->index(['transaction_type', 'status']);
+            $table->index(['type', 'status']);
             $table->index(['status', 'created_at']);
             $table->index('transaction_code');
         });
