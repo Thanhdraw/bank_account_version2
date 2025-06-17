@@ -56,13 +56,18 @@ class BankAccountController extends Controller
     }
 
 
-    public function show(BankAccount $account)
-    {
+    public function show($id)
+    {   
+        $account = $this->bankAccount->findOrFail($id); 
+
         return view('public.accounts.show', compact('account'));
+
     }
 
     public  function info($id){
+
         $account = $this->bankAccount->findOrFail($id);
+            
         return view('public.accounts.info.index', compact('account'));
     }
 

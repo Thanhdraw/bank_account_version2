@@ -6,7 +6,7 @@
         <div class="col-12">
             <!-- Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="mb-0">Quản lý tài khoản</h3>
+                <h3 class="mb-0">Thông tin tài khoản</h3>
                 <div class="badge bg-success fs-6 px-3 py-2">
                     <i class="fas fa-wallet me-2"></i>
                     Số dư: <strong>100,000 VNĐ</strong>
