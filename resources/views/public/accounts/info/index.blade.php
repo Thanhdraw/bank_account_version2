@@ -197,5 +197,7 @@
             </div>
         </div>
     </div>
+     <a href="{{ route('accounts.index') }}" class="btn btn-secondary mt-3">Quay lại danh sách</a>
 </div>
+
 @endsection

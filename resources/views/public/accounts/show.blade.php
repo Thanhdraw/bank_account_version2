@@ -3,7 +3,7 @@
 @section('content')
     <h3>Chủ tài khoản: {{ $account->customer->fullname ?? 'No name' }}</h3>
     <p>Số dư hiện tại: <strong>{{ number_format($account->balance, 2) }}</strong></p>
-
+   <p>@lang('Loại tài khoản'): <strong>{{ $account->type->label() }}</strong></p>
     @if (session('status'))
         <div class="alert alert-info">{{ session('status') }}</div>
     @endif
