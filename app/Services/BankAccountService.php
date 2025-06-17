@@ -57,6 +57,7 @@ class BankAccountService
         DB::beginTransaction();
         try {
             $newbalance = $account->deposit($amount);
+
             DB::commit();
             return [
                 'status' => 'success',

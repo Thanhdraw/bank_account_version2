@@ -57,23 +57,27 @@ class BankAccountController extends Controller
 
 
     public function show($id)
-    {   
-        $account = $this->bankAccount->findOrFail($id); 
+    {
+        $account = $this->bankAccount->findOrFail($id);
 
         return view('public.accounts.show', compact('account'));
 
     }
 
-    public  function info($id){
+    public function info($id)
+    {
 
         $account = $this->bankAccount->findOrFail($id);
-            
+
         return view('public.accounts.info.index', compact('account'));
     }
 
-    public function deposit(TransactionRequest $request, BankAccount $account)
+    public function deposit(TransactionRequest $request, $id)
     {
         $data = $request->validated();
+        
+        $account = $this->bankAccount->findOrFail($id);
+
         $result = $this->service->deposit($account, (float) $data['amount']);
 
         if ($result['status'] === 'success') {
@@ -84,9 +88,11 @@ class BankAccountController extends Controller
 
     }
 
-    public function withdraw(TransactionRequest $request, BankAccount $account)
+    public function withdraw(TransactionRequest $request, $id)
     {
         $data = $request->validated();
+
+        $account = $this->bankAccount->findOrFail($id);
 
         $result = $this->service->withdraw($account, (float) $data['amount']);
 
