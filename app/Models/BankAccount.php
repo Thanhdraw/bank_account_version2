@@ -21,7 +21,7 @@ class BankAccount extends Model
         parent::boot();
 
         static::creating(function ($account) {
-            $account->generateNumberAccount(); // gán cả 2 trường
+            $account->generateNumberAccount();
             $account->balance = 0;
         });
     }
@@ -94,5 +94,10 @@ class BankAccount extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

@@ -128,33 +128,49 @@
                                             <th class="text-center">Trạng thái</th>
                                         </tr>
                                     </thead>
+
                                     <tbody>
+                                        @forelse ($history as $item)
                                         <tr>
-                                            <td>17/06/2025</td>
+                                            <td>{{ $item->created_at->format('d/m/Y H:i:s') }}</td>
                                             <td>
+                                                @if($item->type->value === 10)
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-arrow-up me-1"></i>{{ $item->type->label() }}
+                                                </span>
+                                                @elseif($item->type->value === 20)
                                                 <span class="badge bg-danger">
-                                                    <i class="fas fa-arrow-down me-1"></i>Rút tiền
+                                                    <i class="fas fa-arrow-down me-1"></i>{{ $item->type->label() }}
                                                 </span>
+                                                @else
+                                                <span class="badge bg-secondary">
+                                                    <i class="fas fa-exchange-alt me-1"></i>{{ $item->type->label() }}
+                                                </span>
+                                                @endif
                                             </td>
-                                            <td class="text-end text-danger fw-medium">-2,000 VNĐ</td>
-                                            <td>Chi tiêu cá nhân</td>
+                                            <td class="text-end fw-medium">
+                                                @if($item->type->value === 10)
+                                                <span class="text-success">+{{ number_format($item->amount) }}
+                                                    VNĐ</span>
+                                                @elseif($item->type->value === 20)
+                                                <span class="text-danger">-{{ number_format($item->amount) }} VNĐ</span>
+                                                @else
+                                                <span class="text-muted">{{ number_format($item->amount) }} VNĐ</span>
+                                                @endif
+                                            </td>
+                                            <td>{{ $item->description ?? $item->note ?? 'Không có ghi chú' }}</td>
                                             <td class="text-center">
-                                                <span class="badge bg-success">Thành công</span>
+                                                <span class="badge bg-success">{{ $item->status->label() }}</span>
                                             </td>
                                         </tr>
+                                        @empty
                                         <tr>
-                                            <td>16/06/2025</td>
-                                            <td>
-                                                <span class="badge bg-primary">
-                                                    <i class="fas fa-arrow-up me-1"></i>Nạp tiền
-                                                </span>
-                                            </td>
-                                            <td class="text-end text-success fw-medium">+5,000 VNĐ</td>
-                                            <td>Nạp từ ATM</td>
-                                            <td class="text-center">
-                                                <span class="badge bg-success">Thành công</span>
+                                            <td colspan="5" class="text-center py-4 text-muted">
+                                                <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
+                                                Chưa có giao dịch nào
                                             </td>
                                         </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>

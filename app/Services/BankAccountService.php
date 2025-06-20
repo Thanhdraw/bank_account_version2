@@ -1,13 +1,17 @@
 <?php
 namespace App\Services;
 
+use App\Enums\StatusTransaction;
 use App\Models\BankAccount;
 use App\Models\Customer;
 use App\Services\Accounts\AccountFactory;
 use Illuminate\Support\Facades\DB;
 use App\Enums\TypeAccount;
+use App\Enums\TypeTransaction;
 use App\Repositories\Contracts\BankAccountRepositoryInterface;
 use App\Repositories\Contracts\CustomerRepositoryInterface as ContractsCustomerRepositoryInterface;
+use App\Repositories\Contracts\TransactionRepositoryInterface;
+use App\Repositories\Eloquent\EloquentTransactionRepository;
 use App\Services\Accounts\StandardAccount;
 
 class BankAccountService
@@ -16,6 +20,7 @@ class BankAccountService
     public function __construct(
         protected ContractsCustomerRepositoryInterface $customerRepo,
         protected BankAccountRepositoryInterface $accountRepo,
+        protected EloquentTransactionRepository $eloquentTransactionRepository
     ) {
     }
 
@@ -61,7 +66,12 @@ class BankAccountService
 
             $logic = AccountFactory::make($account);
             $newbalance = $logic->deposit($amount);
-
+            $this->eloquentTransactionRepository->create([
+                'from_account_id' => $account->id,
+                'type' => TypeTransaction::Deposit,
+                'status' => StatusTransaction::Success,
+                'amount' => $amount
+            ]);
             DB::commit();
             return [
                 'status' => 'success',
@@ -86,7 +96,12 @@ class BankAccountService
 
             $logic = AccountFactory::make($account);
             $newbalance = $logic->withdraw($amount);
-            
+            $this->eloquentTransactionRepository->create([
+                'from_account_id' => $account->id,
+                'type' => TypeTransaction::Withdraw,
+                'status' => StatusTransaction::Success,
+                'amount' => $amount
+            ]);
             DB::commit();
             return [
                 'status' => 'success',
