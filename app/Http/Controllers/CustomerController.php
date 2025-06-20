@@ -16,7 +16,9 @@ class CustomerController extends Controller
         $customer = $this->customer->findOrFail($id);
 
         return view('public.accounts.info.index', [
+
             'customer' => $customer,
+
             'gender' => GenderCustomer::asSelectArray(),
         ]);
     }
