@@ -5,7 +5,7 @@ namespace App\Repositories\Eloquent;
 use App\Models\Transaction;
 use App\Repositories\Contracts\TransactionRepositoryInterface;
 use DateTime;
-use Illuminate\Support\Collection;  
+use Illuminate\Support\Collection;
 
 
 

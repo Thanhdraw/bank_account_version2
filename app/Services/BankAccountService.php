@@ -11,6 +11,8 @@ use App\Repositories\Contracts\BankAccountRepositoryInterface;
 use App\Repositories\Contracts\CustomerRepositoryInterface as ContractsCustomerRepositoryInterface;
 use App\Repositories\Eloquent\EloquentTransactionRepository;
 use App\Services\Accounts\StandardAccount;
+use DateTime;
+use Illuminate\Support\Collection;
 
 class BankAccountService
 {
@@ -18,7 +20,9 @@ class BankAccountService
     public function __construct(
         protected ContractsCustomerRepositoryInterface $customerRepo,
         protected BankAccountRepositoryInterface $accountRepo,
-        protected EloquentTransactionRepository $eloquentTransactionRepository
+        protected EloquentTransactionRepository $eloquentTransactionRepository,
+        protected EloquentTransactionRepository $repo,
+
     ) {
     }
 
@@ -140,6 +144,21 @@ class BankAccountService
             TypeAccount::Standard => new StandardAccount($account),
             default => throw new \Exception("Loại tài khoản không hợp lệ"),
         };
+    }
+
+    public function report(DateTime $from, DateTime $to, $accountIDs)
+    {
+        $deposit = 0;
+        $withdraw = 0;
+        $data = $this->repo->report($from, $to, $accountIDs);
+        foreach ($data as $transaction) {
+            if ($transaction->type == TypeTransaction::Deposit) {
+                $deposit += $transaction->amount;
+            } else {
+                $withdraw += $transaction->amount;
+            }
+        }
+        return [$deposit, $withdraw];
     }
 
 
