@@ -4,9 +4,6 @@ namespace App\Services\Accounts;
 
 use App\Abstracts\BaseAccount;
 
-
-
-
 class StandardAccount extends BaseAccount
 {
     public function deposit(float $amount): float

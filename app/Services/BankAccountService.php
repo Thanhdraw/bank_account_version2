@@ -3,14 +3,12 @@ namespace App\Services;
 
 use App\Enums\StatusTransaction;
 use App\Models\BankAccount;
-use App\Models\Customer;
 use App\Services\Accounts\AccountFactory;
 use Illuminate\Support\Facades\DB;
 use App\Enums\TypeAccount;
 use App\Enums\TypeTransaction;
 use App\Repositories\Contracts\BankAccountRepositoryInterface;
 use App\Repositories\Contracts\CustomerRepositoryInterface as ContractsCustomerRepositoryInterface;
-use App\Repositories\Contracts\TransactionRepositoryInterface;
 use App\Repositories\Eloquent\EloquentTransactionRepository;
 use App\Services\Accounts\StandardAccount;
 
