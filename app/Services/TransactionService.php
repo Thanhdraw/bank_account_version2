@@ -20,7 +20,7 @@ class TransactionService
         $customer = $this->customer->findOrFail($id);
 
         $accountID = $customer->account->pluck('id');
-        
+
         $history = $this->transaction
             ->whereIn('from_account_id', $accountID)
             ->orderByDesc('created_at')

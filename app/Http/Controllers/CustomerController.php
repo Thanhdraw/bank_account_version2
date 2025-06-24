@@ -13,8 +13,6 @@ use App\Models\Transaction;
 use App\Repositories\Eloquent\EloquentTransactionRepository;
 use App\Services\BankAccountService;
 use App\Services\TransactionService;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
 
 class CustomerController extends Controller
 {
@@ -67,7 +65,9 @@ class CustomerController extends Controller
     // }
     public function index(ReportTransactionRequest $request, $id)
     {
+
         try {
+
             $customer = $this->customer->findOrFail($id);
 
             $history = $this->transactionService->getInfoTrans($id);
@@ -86,7 +86,7 @@ class CustomerController extends Controller
 
         } catch (\Exception $e) {
 
-            return redirect()->back()->with('error', 'Unable to load customer data');
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
