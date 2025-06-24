@@ -36,6 +36,7 @@ Route::prefix('/customters')
     ->controller(App\Http\Controllers\CustomerController::class)
     ->name('customer.')
     ->group(function () {
-        Route::post('/{id}', 'index')->name('index');
+        Route::get('/{id}', 'index')->name('index');
         Route::put('update/{id}', 'update')->name('update');
+        Route::post('/{id}', 'index')->name('index');
     });
