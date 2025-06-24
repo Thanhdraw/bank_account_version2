@@ -128,33 +128,52 @@
                                             <th class="text-center">Trạng thái</th>
                                         </tr>
                                     </thead>
+
                                     <tbody>
+                                        @forelse ($history as $item)
                                         <tr>
-                                            <td>17/06/2025</td>
+                                            <td>{{ $item->created_at->format('d/m/Y H:i:s') }}</td>
                                             <td>
+                                                @if ($item->type->value === 10)
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-arrow-up me-1"></i>{{ $item->type->label() }}
+                                                </span>
+                                                @elseif($item->type->value === 20)
                                                 <span class="badge bg-danger">
-                                                    <i class="fas fa-arrow-down me-1"></i>Rút tiền
+                                                    <i class="fas fa-arrow-down me-1"></i>{{ $item->type->label() }}
                                                 </span>
+                                                @else
+                                                <span class="badge bg-secondary">
+                                                    <i class="fas fa-exchange-alt me-1"></i>{{ $item->type->label() }}
+                                                </span>
+                                                @endif
                                             </td>
-                                            <td class="text-end text-danger fw-medium">-2,000 VNĐ</td>
-                                            <td>Chi tiêu cá nhân</td>
+                                            <td class="text-end fw-medium">
+                                                @if ($item->type->value === 10)
+                                                <span class="text-success">+{{ number_format($item->amount) }}
+                                                    VNĐ</span>
+                                                @elseif($item->type->value === 20)
+                                                <span class="text-danger">-{{ number_format($item->amount) }}
+                                                    VNĐ</span>
+                                                @else
+                                                <span class="text-muted">{{ number_format($item->amount) }}
+                                                    VNĐ</span>
+                                                @endif
+                                            </td>
+                                            <td>{{ $item->description ?? ($item->note ?? 'Không có ghi chú') }}
+                                            </td>
                                             <td class="text-center">
-                                                <span class="badge bg-success">Thành công</span>
+                                                <span class="badge bg-success">{{ $item->status->label() }}</span>
                                             </td>
                                         </tr>
+                                        @empty
                                         <tr>
-                                            <td>16/06/2025</td>
-                                            <td>
-                                                <span class="badge bg-primary">
-                                                    <i class="fas fa-arrow-up me-1"></i>Nạp tiền
-                                                </span>
-                                            </td>
-                                            <td class="text-end text-success fw-medium">+5,000 VNĐ</td>
-                                            <td>Nạp từ ATM</td>
-                                            <td class="text-center">
-                                                <span class="badge bg-success">Thành công</span>
+                                            <td colspan="5" class="text-center py-4 text-muted">
+                                                <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
+                                                Chưa có giao dịch nào
                                             </td>
                                         </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
@@ -170,19 +189,21 @@
                         </div>
                         <div class="card-body">
                             <!-- Form lọc -->
-                            <form class="row g-3 mb-4">
+                            <form id="report-form" action="{{ route('customer.index', $customer->id) }}" method="post"
+                                class="row g-3 mb-4">
+                                @csrf
+
                                 <div class="col-md-4">
                                     <label class="form-label fw-medium">Từ ngày</label>
-                                    <input type="date" class="form-control" value="2025-06-01">
+                                    <input type="date" name="from" class="form-control"
+                                        value="{{ old('from', now()->format('Y-m-d')) }}">
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label fw-medium">Đến ngày</label>
-                                    <input type="date" class="form-control" value="2025-06-17">
+                                    <input type="date" name="to" class="form-control" value="{{ old('to') }}">
                                 </div>
-                                <div class="col-md-4 d-flex align-items-end">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fas fa-search me-2"></i>Xem báo cáo
-                                    </button>
+                                <div class="col-md-4 align-self-end">
+                                    <button type="submit" class="btn btn-primary w-100 mt-2">Xem báo cáo</button>
                                 </div>
                             </form>
 
@@ -195,7 +216,15 @@
                                                 <i class="fas fa-arrow-up fa-2x"></i>
                                             </div>
                                             <h6 class="card-title">Tổng nạp</h6>
-                                            <h4 class="text-success mb-0">5,000 VNĐ</h4>
+                                            {{-- Blade view --}}
+                                            @if (isset($balance))
+                                            {{ number_format($balance, 0, ',', '.') }} đ
+                                            @else
+                                            0 đ
+                                            @endif
+
+                                            </h4>
+
                                         </div>
                                     </div>
                                 </div>
@@ -206,7 +235,7 @@
                                                 <i class="fas fa-arrow-down fa-2x"></i>
                                             </div>
                                             <h6 class="card-title">Tổng rút</h6>
-                                            <h4 class="text-danger mb-0">2,000 VNĐ</h4>
+                                            <h4 class="text-danger mb-0">{{ number_format($withdraw, 0, ',', '.') }} đ
                                         </div>
                                     </div>
                                 </div>
@@ -217,7 +246,8 @@
                                                 <i class="fas fa-wallet fa-2x"></i>
                                             </div>
                                             <h6 class="card-title">Số dư cuối kỳ</h6>
-                                            <h4 class="text-primary mb-0">103,000 VNĐ</h4>
+                                            <h4 class="text-primary mb-0">{{ number_format($balance, 0, ',', '.') }}
+                                            </h4>
                                         </div>
                                     </div>
                                 </div>
@@ -230,5 +260,20 @@
     </div>
     <a href="{{ route('accounts.index') }}" class="btn btn-secondary mt-3">Quay lại danh sách</a>
 </div>
-
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const from = document.querySelector('input[name="from"]');
+        const to = document.querySelector('input[name="to"]');
+
+        from.addEventListener('change', submitIfReady);
+        to.addEventListener('change', submitIfReady);
+
+        function submitIfReady() {
+            if (from.value && to.value) {
+                document.getElementById('report-form').submit();
+            }
+        }
+    });
+</script>
