@@ -8,7 +8,7 @@ use App\Http\Requests\TransactionRequest;
 use App\Models\BankAccount;
 
 use App\Services\BankAccountService;
-
+use Illuminate\Http\Request;
 
 class BankAccountController extends Controller
 {
@@ -59,7 +59,9 @@ class BankAccountController extends Controller
     {
         $account = $this->bankAccount->findOrFail($id);
 
-        return view('public.accounts.show', compact('account'));
+        $remiterInfo = $account->number_account;
+
+        return view('public.accounts.show', compact('account', 'remiterInfo'));
 
     }
 
@@ -92,5 +94,11 @@ class BankAccountController extends Controller
             return redirect()->back()->with('success', $result['message']);
         }
         return redirect()->back()->with('error', $result['message']);
+    }
+
+
+    public function transfer(Request $request, $id)
+    {
+
     }
 }
