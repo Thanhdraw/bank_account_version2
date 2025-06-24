@@ -86,7 +86,7 @@ class BankAccountService
 
             $logic = AccountFactory::make($account);
             $newbalance = $logic->withdraw($amount);
-            
+
             DB::commit();
             return [
                 'status' => 'success',
