@@ -28,7 +28,7 @@ Route::prefix('/accounts')
         Route::post('/{id}/deposit', 'deposit')->name('deposit');
         Route::post('/{id}/withdraw', 'withdraw')->name('withdraw');
 
-        Route::post('/transfer/{id}', 'transfer')->name('transfer');
+        Route::post('/transfer/{number}', 'transfer')->name('transfer');
 
     });
 

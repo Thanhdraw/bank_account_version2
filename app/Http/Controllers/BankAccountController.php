@@ -2,24 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\StatusTransaction;
 use App\Enums\TypeAccount;
+use App\Enums\TypeTransaction;
 use App\Http\Requests\BankAccountRequest;
 use App\Http\Requests\TransactionRequest;
+use App\Http\Requests\TransferRequest;
 use App\Models\BankAccount;
-
+use App\Models\Transaction;
 use App\Services\BankAccountService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BankAccountController extends Controller
 {
     protected $service;
     protected $bankAccount;
 
+    protected $transaction;
 
-    public function __construct(BankAccountService $service, BankAccount $bankAccount)
+
+    public function __construct(BankAccountService $service, BankAccount $bankAccount, Transaction $transaction)
     {
         $this->service = $service;
         $this->bankAccount = $bankAccount;
+        $this->transaction = $transaction;
     }
 
 
@@ -97,8 +104,61 @@ class BankAccountController extends Controller
     }
 
 
-    public function transfer(Request $request, $id)
+    public function transfer(TransferRequest $request, $transferAccount)
     {
+        try {
+            $data = $request->validated();
 
+            $sender = $this->bankAccount->where('number_account', $transferAccount)->firstOrFail();
+
+            $recieve = $this->bankAccount->where('number_account', $data['to_account_id'])->firstOrFail();
+
+            if ($data['amount'] > $sender->balance) {
+
+                return redirect()->back()->with('error', 'không đủ số dư để chuyển khoản');
+            }
+
+            $this->processTransfer($data, $sender, $recieve);
+
+            return redirect()->back()->with('success', 'Chuyển khoản thành công');
+
+        } catch (\Throwable $th) {
+
+            return redirect()->back()->with('error', $th->getMessage());
+        }
     }
+
+
+    private function processTransfer($data, $sender, $recieve)
+    {
+        // Create transaction records, update balances
+        DB::beginTransaction();
+        try {
+
+            $this->service->withdraw($sender, $data['amount']);
+
+            $this->service->deposit($recieve, $data['amount']);
+
+            $this->transaction->create([
+                'from_account_id' => $sender->id,
+                'to_account_id' => $recieve->id,
+                'amount' => $data['amount'],
+                'notes' => $data['notes'] ?? null,
+                'type' => TypeTransaction::Transfer,
+                'status' => StatusTransaction::Success,
+
+            ]);
+
+            DB::commit();
+
+
+        } catch (\Throwable $th) {
+
+            DB::rollBack();
+
+            return redirect()->back()->with('error', $th->getMessage());
+
+        }
+    }
+
 }

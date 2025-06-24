@@ -56,7 +56,7 @@
             @csrf
             <div class="mb-3">
                 <label for="to_account" class="form-label">Tài khoản nhận</label>
-                <input type="text" name="to_account" id="to_account" class="form-control"
+                <input type="text" name="to_account_id" id="to_account_id" class="form-control"
                     placeholder="Số tài khoản người nhận" required>
             </div>
 
@@ -68,7 +68,7 @@
 
             <div class="mb-3">
                 <label for="note" class="form-label">Ghi chú</label>
-                <textarea name="note" id="note" class="form-control" rows="2"
+                <textarea name="notes" id="notes" class="form-control" rows="2"
                     placeholder="Nội dung chuyển tiền (tuỳ chọn)"></textarea>
             </div>
 

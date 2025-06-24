@@ -8,11 +8,17 @@ enum TypeTransaction: int
 
     case Withdraw = 20;
 
+    case Transfer = 30;
+
+    case Receivetransfer = 40;
+
     public function label(): string
     {
         return match ($this) {
             self::Deposit => 'Nạp tiền',
             self::Withdraw => 'Rút tiền',
+            self::Transfer => 'Chuyển tiền',
+            self::Receivetransfer => 'Nhận tiền'
         };
     }
 
