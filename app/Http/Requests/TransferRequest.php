@@ -24,7 +24,8 @@ class TransferRequest extends FormRequest
         return [
             'to_account_id' => ['required', 'numeric', 'exists:accounts,account_number'],
             'amount' => ['required', 'numeric'],
-            'notes' => ['nullable', 'text']
+            'notes' => ['nullable', 'string'],
+            'transaction_password' => ['required']
         ];
     }
     public function withValidator(Validator $validator): void

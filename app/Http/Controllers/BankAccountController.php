@@ -13,6 +13,7 @@ use App\Models\Transaction;
 use App\Services\BankAccountService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class BankAccountController extends Controller
 {
@@ -111,6 +112,11 @@ class BankAccountController extends Controller
 
             $sender = $this->bankAccount->where('number_account', $transferAccount)->firstOrFail();
 
+            if (!$this->checkPassTransfer($sender, $data['transaction_password'])) {
+
+                return redirect()->back()->with('error', 'Invalid password');
+            }
+
             $recieve = $this->bankAccount->where('number_account', $data['to_account_id'])->firstOrFail();
 
             if ($data['amount'] > $sender->balance) {
@@ -126,6 +132,12 @@ class BankAccountController extends Controller
 
             return redirect()->back()->with('error', $th->getMessage());
         }
+    }
+
+
+    private function checkPassTransfer(BankAccount $bankAccount, $inputPassword): bool
+    {
+        return Hash::check($inputPassword, $bankAccount->password);
     }
 
 
