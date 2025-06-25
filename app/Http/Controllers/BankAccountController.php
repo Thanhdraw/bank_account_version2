@@ -11,7 +11,6 @@ use App\Http\Requests\TransferRequest;
 use App\Models\BankAccount;
 use App\Models\Transaction;
 use App\Services\BankAccountService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -143,7 +142,6 @@ class BankAccountController extends Controller
 
     private function processTransfer($data, $sender, $recieve)
     {
-        // Create transaction records, update balances
         DB::beginTransaction();
         try {
 
@@ -153,10 +151,15 @@ class BankAccountController extends Controller
 
             $this->transaction->create([
                 'from_account_id' => $sender->id,
+
                 'to_account_id' => $recieve->id,
+
                 'amount' => $data['amount'],
+
                 'notes' => $data['notes'] ?? null,
+
                 'type' => TypeTransaction::Transfer,
+
                 'status' => StatusTransaction::Success,
 
             ]);
