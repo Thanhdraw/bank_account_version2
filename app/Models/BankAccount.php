@@ -95,4 +95,10 @@ class BankAccount extends Model
     {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
+    // Account.php
+    public function transactionsFrom()
+    {
+        return $this->hasMany(Transaction::class, 'from_account_id');
+    }
+
 }

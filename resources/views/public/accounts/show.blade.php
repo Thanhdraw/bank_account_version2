@@ -109,7 +109,6 @@
 <script>
     // Mở popup nhập mật khẩu
 function openPasswordModal() {
-    // Lấy thông tin từ form
     var amount = document.getElementById('amount').value;
     var toAccount = document.getElementById('to_account_id').value;
     
