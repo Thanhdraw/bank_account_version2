@@ -42,3 +42,12 @@ Route::prefix('/customters')
         Route::put('update/{id}', 'update')->name('update');
         Route::post('/{id}', 'index')->name('index');
     });
+
+
+
+Route::prefix('/test')
+    ->controller(App\Http\Controllers\Api\BankAccountController::class)
+    ->name('ORM.')
+    ->group(function () {
+        Route::get('/{name?}', 'index')->name('index');
+    });
